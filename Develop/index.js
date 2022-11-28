@@ -1,10 +1,9 @@
-// TODO: Include packages needed for this application
+// packages needed for this application
 const fs = require("fs")
 const inquirer = require("inquirer");
 const { default: Choices } = require("inquirer/lib/objects/choices");
 
-// TODO: Create an array of questions for user input
-// const questions = []
+// questions that will be logged on the console for user to answer
 inquirer.prompt([
     {
         name: "projectTitle",
@@ -16,11 +15,6 @@ inquirer.prompt([
         message: "Describe your project",
         type: "input"
     },
-    // {
-    //     name: "tableOfContents",
-    //     message: "Include a table of contents",
-    //     type: "Input"
-    // },
     {
         name: "installation",
         message: "How do users install the project?",
@@ -59,34 +53,43 @@ inquirer.prompt([
     }
 
 ]).then(response => {
-    const html = `
-    # ${response.projectTitle}
+// if else statements that generate the appropriate license badge
+    let badge = ""
+    if(response.license === 'MIT License'){
+        badge = "[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)"
+    } else if(response.license === 'Apache License 2.0'){
+        badge = "[![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)"
+    } else if (response.license === 'Boost Software License 1.0'){
+        badge = "[![License](https://img.shields.io/badge/License-Boost_1.0-lightblue.svg)](https://www.boost.org/LICENSE_1_0.txt)"
+    }
+    // text that will be generate in the readme
+    const file = ` 
+# ${response.projectTitle}
 
-    ## Table of Contents
-    * [Description](#description)
-    * [Usage](#usage)
-    * [License](#license)
-    * [Contributing](#contributing)
-    * [Tests](#tests)
-    * [Questions](#questions)
+## License
+${badge}
+## Table of Contents
+* [Description](#description)
+* [Usage](#usage)
+* [License](#license)
+* [Contributing](#contributing)
+* [Tests](#tests)
+* [Questions](#questions)
+## Description
+${response.description}
+## Installation
+${response.installation}
+## Usage
+${response.usage}
+## Contributing
+${response.contributing}
+## Tests
+${response.tests}
+## Questions
+If you have any questions, comments, or concerns, you may contact me via [GitHub](https://github.com/${response.github}) or 
+by email: ${response.email}.`
 
-    ## Description
-    ${response.description}
-    ## Installation
-    ${response.installation}
-    ## Usage
-    ${response.usage}
-    ## License
-    ${response.license}
-    ## Contributing
-    ${response.contributing}
-    ## Tests
-    ${response.tests}
-    ## Questions
-    GitHub: ${response.github} [GitHub](https://github.com/omar-correa)
-    The best way to reach me for any questions, comments, or concerns is via my email: ${response.email}.`
-
-    fs.writeFile("README.md", html, error => {
+    fs.writeFile("README.md", file, error => {
         if (error) {
             console.log("error")
         } else {
@@ -96,7 +99,7 @@ inquirer.prompt([
 });
 
 // TODO: Create a function to write README file
-function writeToFile(fileName, data) { }
+function writeToFile(fileName, data) {}
 
 // TODO: Create a function to initialize app
 function init() { }
