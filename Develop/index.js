@@ -1,8 +1,10 @@
 // TODO: Include packages needed for this application
 const fs = require("fs")
-const inquirer = require("inquirer")
+const inquirer = require("inquirer");
+const { default: Choices } = require("inquirer/lib/objects/choices");
 
 // TODO: Create an array of questions for user input
+// const questions = []
 inquirer.prompt([
     {
         name: "projectTitle",
@@ -14,72 +16,81 @@ inquirer.prompt([
         message: "Describe your project",
         type: "input"
     },
-    {
-        name: "tableOfContents",
-        message: "Include a table of contents",
-        type: "Input"
-    },
+    // {
+    //     name: "tableOfContents",
+    //     message: "Include a table of contents",
+    //     type: "Input"
+    // },
     {
         name: "installation",
-        message: "",
-        type: "Input"
+        message: "How do users install the project?",
+        type: "input"
     },
     {
         name: "usage",
-        message: "",
-        type: "Input"
+        message: "For what will this project be used?",
+        type: "input"
     },
     {
         name: "license",
-        message: "",
-        type: "List"
+        message: "Which license is needed?",
+        type: "list",
+        choices: ['MIT License','Apache License 2.0','Boost Software License 1.0', 'Eclipse Public License 2.0','Mozilla Public License 2.0']
     },
     {
         name: "contributing",
-        message: "",
-        type: "Input"
+        message: "How do future developers go about contributing to the project?",
+        type: "input"
     },
     {
         name: "tests",
-        message: "",
-        type: "Input"
+        message: "What tests need to be run?",
+        type: "input"
     },
     {
-        name: "questions",
-        message: "",
-        type: "Input"
+        name: "github",
+        message: "What is your GitHub username?",
+        type: "input"
+    },
+    {
+        name: "email",
+        message: "what is your email?",
+        type: "input"
     }
 
 ]).then(response => {
-    const html = `<html lang="en">
-    <head>
-      <meta charset="UTF-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <meta http-equiv="X-UA-Compatible" content="ie=edge">
-      <title>Portfolio</title>
-      <link rel="stylesheet" href="./style.css">
-    </head>
-    <body>
-      <main>
-          <h1>Portfolio</h1> 
-          <div><h3>${response.projectTitle}</h3></div>
-          <div><h3>${response.description}</h3></div>
-          <div><h3>${response.tableOfContents}</h3></div>
-          <div><h3>${response.installation}</h3></div>
-          <div><h3>${response.usage}</h3></div>
-          <div><h3>${response.license}</h3></div>
-          <div><h3>${response.contributing}</h3></div>
-          <div><h3>${response.tests}</h3></div>
-          <div><h3>${response.questions}</h3></div>
-        </main>
-        <script src="index.js"></script>
-    </body>
-    </html>`
-    fs.writeFile("index.html", html, error => {
+    const html = `
+    # ${response.projectTitle}
+
+    ## Table of Contents
+    * [Description](#description)
+    * [Usage](#usage)
+    * [License](#license)
+    * [Contributing](#contributing)
+    * [Tests](#tests)
+    * [Questions](#questions)
+
+    ## Description
+    ${response.description}
+    ## Installation
+    ${response.installation}
+    ## Usage
+    ${response.usage}
+    ## License
+    ${response.license}
+    ## Contributing
+    ${response.contributing}
+    ## Tests
+    ${response.tests}
+    ## Questions
+    GitHub: ${response.github} [GitHub](https://github.com/omar-correa)
+    The best way to reach me for any questions, comments, or concerns is via my email: ${response.email}.`
+
+    fs.writeFile("README.md", html, error => {
         if (error) {
             console.log("error")
         } else {
-            console.log("Response saved")
+            console.log("README successfully created")
         }
     })
 });
